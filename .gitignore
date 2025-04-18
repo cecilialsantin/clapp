@@ -1,0 +1,25 @@
+# Entorno virtual
+clappenv/
+env/
+
+# Archivos temporales y logs
+*.log
+*.pyc
+__pycache__/
+
+# Archivos de sistema
+.DS_Store
+
+# Archivos de subida temporales
+static/uploads/
+
+# Modelos de Ollama descargados (por si alguna vez van en el repo)
+*.bin
+*.gguf
+
+# Configs locales opcionales
+.env
+*.sqlite3
+
+# Archivos de backup
+*~
