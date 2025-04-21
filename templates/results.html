@@ -4,15 +4,24 @@
   <meta charset="UTF-8">
   <title>Resultado del análisis</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script>
+    function imprimirResultado() {
+      window.print();
+    }
+  </script>
 </head>
 <body class="bg-light">
   <div class="container py-5">
     <h2>✅ Resultado del Análisis</h2>
 
+    <div class="d-flex justify-content-end mb-3">
+      <button class="btn btn-outline-secondary" onclick="imprimirResultado()">🖨️ Imprimir / Exportar</button>
+    </div>
+
     <h5 class="mt-4">📄 Texto extraído del rótulo:</h5>
     <pre class="bg-white p-3 rounded border">{{ texto }}</pre>
 
-    <h5 class="mt-4">📊 Resultado del modelo:</h5>
+    <h5 class="mt-4">🧠 Resultado del modelo:</h5>
     <pre class="bg-white p-3 rounded border">{{ resultado }}</pre>
 
     <h5 class="mt-4">🥗 Componentes nutricionales detectados:</h5>
@@ -27,18 +36,76 @@
     {% endif %}
 
     <h5 class="mt-4">🧾 RNE detectados:</h5>
-    <ul>
+    <ul class="list-group">
       {% for r in rne %}
-        <li>{{ r }}</li>
+        <li class="list-group-item">{{ r }}</li>
       {% endfor %}
     </ul>
 
     <h5 class="mt-4">🧾 RNPA detectados:</h5>
-    <ul>
+    <ul class="list-group">
       {% for r in rnpa %}
-        <li>{{ r }}</li>
+        <li class="list-group-item">{{ r }}</li>
       {% endfor %}
     </ul>
+
+    <h5 class="mt-4">⚠️ Sellos octogonales detectados en el rótulo:</h5>
+    {% if sellos %}
+      <ul class="list-group">
+        {% for sello in sellos %}
+          <li class="list-group-item list-group-item-warning">{{ sello }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se detectaron sellos de advertencia.</p>
+    {% endif %}
+
+    <h5 class="mt-4">📊 Evaluación del rotulado frontal:</h5>
+    <div class="bg-white p-3 rounded border">
+      <ul>
+        <li>Azúcares agregados: <strong>{{ 'Sí' if rotulado.azucares_agregados else 'No' }}</strong></li>
+        <li>Sal agregada: <strong>{{ 'Sí' if rotulado.sodio_agregado else 'No' }}</strong></li>
+        <li>Materia grasa agregada: <strong>{{ 'Sí' if rotulado.grasas_agregadas else 'No' }}</strong></li>
+        <li>Exceso en azúcares: <strong>{{ 'Sí' if rotulado.exceso_azucares else 'No' }}</strong></li>
+        <li>Exceso en sodio: <strong>{{ 'Sí' if rotulado.exceso_sodio else 'No' }}</strong></li>
+        <li>Exceso en grasas totales: <strong>{{ 'Sí' if rotulado.exceso_grasas_totales else 'No' }}</strong></li>
+        <li>Exceso en grasas saturadas: <strong>{{ 'Sí' if rotulado.exceso_grasas_saturadas else 'No' }}</strong></li>
+        <li>Exceso en calorías: <strong>{{ 'Sí' if rotulado.exceso_calorias else 'No' }}</strong></li>
+      </ul>
+    </div>
+
+    <h5 class="mt-4">🔳 Octógonos requeridos según análisis:</h5>
+    {% if rotulado.requiere_octogonos %}
+      <ul class="list-group">
+        {% for sello in rotulado.requiere_octogonos %}
+          <li class="list-group-item list-group-item-danger">{{ sello }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se requiere ningún octógono.</p>
+    {% endif %}
+
+    <h5 class="mt-4">🧾 Leyendas obligatorias:</h5>
+    {% if rotulado.leyendas_obligatorias %}
+      <ul class="list-group">
+        {% for leyenda in rotulado.leyendas_obligatorias %}
+          <li class="list-group-item list-group-item-info">{{ leyenda }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No se requieren leyendas.</p>
+    {% endif %}
+
+    <h5 class="mt-4">🚫 Sellos faltantes (deberían estar y no fueron detectados):</h5>
+    {% if rotulado.sellos_faltantes %}
+      <ul class="list-group">
+        {% for faltante in rotulado.sellos_faltantes %}
+          <li class="list-group-item list-group-item-warning">{{ faltante }}</li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No faltan sellos obligatorios.</p>
+    {% endif %}
 
     <a href="/" class="btn btn-primary mt-4">🔙 Volver</a>
   </div>
